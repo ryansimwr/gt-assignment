@@ -1,5 +1,5 @@
 resource "aws_lb" "alb_front" {
-  depends_on = [ aws_internet_gateway.igw ]
+  depends_on                 = [aws_internet_gateway.igw]
   name                       = "dev-alb-public"
   internal                   = false
   load_balancer_type         = "application"
