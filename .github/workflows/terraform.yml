@@ -47,9 +47,11 @@ jobs:
           terraform_version: "1.5.7"
       
       - name: Terraform init
+        id: init
         run: terraform init -backend-config="bucket=${{ secrets.BUCKET_TF_STATE }}"
 
       - name: Terraform format
+        id: format
         run: terraform fmt -check
       
       - name: Terraform Validate
@@ -59,10 +61,15 @@ jobs:
       # Generates an execution plan for Terraform
       - name: Terraform Plan
         id: plan
-        run: |
-          terraform plan -no-color -input=false \
-          -out=TFplan.JSON
+        run: terraform plan -no-color -input=false
+        continue-on-error: true
+      
+      - name: Terraform Plan Status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
+      
+      - name: Terraform Apply
+        run: terraform apply -auto-approve -input=false
 
-        
 
           
