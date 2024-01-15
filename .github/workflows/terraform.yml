@@ -15,9 +15,15 @@ on:
   workflow_dispatch:
 
 run-name: TF Deployment triggered by ${{ github.actor }}
+
+env:
+  AWS_REGION: 'ap-southeast-1'
   
 jobs:
   terraform-deploy:
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read 
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -27,6 +33,13 @@ jobs:
     steps:
       - name: Checkout Terrafrom Code
         uses: actions/checkout@v4
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: arn:aws:iam::736536588706:role/github-actions-role
+          role-session-name: tfdeploymentsession
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
