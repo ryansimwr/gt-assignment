@@ -1,0 +1,41 @@
+name: TF Deploy to AWS
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - infra/**
+  
+  pull_request:
+    branches:
+      - main
+    paths:
+      - infra/**
+  
+  workflow_dispatch:
+
+run-name: TF Deployment triggered by ${{ github.actor }}
+  
+jobs:
+  terraform-deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./infra
+
+    steps:
+      - name: Checkout Terrafrom Code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.5.7"
+      
+      - name: Terraform init
+        run: terraform init -backend-config="bucket=${{ secrets.BUCKET_TF_STATE }}"
+
+      - name: Terraform format
+        run: terraform fmt -check
+          

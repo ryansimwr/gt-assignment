@@ -1,9 +1,0 @@
-name: Deploy to AWS
-on:
-  [workflow_dispatch]
-jobs:
-  tests:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Terrafrom Code
-        run: actions/checkout@v4
