@@ -1,25 +1,31 @@
-# resource "aws_lb" "alb" {
-#   name               = "dev-alb-asg"
-#   internal           = false
-#   load_balancer_type = "application"
-#   security_groups    = [aws_security_group.sh_sg_for_elb.id]
-#   subnets            = [aws_subnet.sh_subnet_1.id, aws_subnet.sh_subnet_1a.id]
-#   depends_on         = [aws_internet_gateway.sh_gw]
-# }
+resource "aws_lb" "alb_front" {
+  depends_on = [ aws_internet_gateway.igw ]
+  name                       = "dev-alb-public"
+  internal                   = false
+  load_balancer_type         = "application"
+  security_groups            = [aws_security_group.lb.id]
+  subnets                    = [for subnet in aws_subnet.public : subnet.id]
+  enable_deletion_protection = false
 
-# resource "aws_lb_target_group" "sh_alb_tg" {
-#   name     = "sh-tf-lb-alb-tg"
-#   port     = 80
-#   protocol = "HTTP"
-#   vpc_id   = aws_vpc.sh_main.id
-# }
+  tags = {
+    Environment = "Development"
+  }
+}
 
-# resource "aws_lb_listener" "sh_front_end" {
-#   load_balancer_arn = aws_lb.sh_lb.arn
-#   port              = "80"
-#   protocol          = "HTTP"
-#   default_action {
-#     type             = "forward"
-#     target_group_arn = aws_lb_target_group.sh_alb_tg.arn
-#   }
-# }
+resource "aws_lb_target_group" "alb_front_tg" {
+  name     = "alb-front-tg"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = aws_vpc.this.id
+}
+
+resource "aws_lb_listener" "alb_front_listener" {
+  load_balancer_arn = aws_lb.alb_front.arn
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.alb_front_tg.arn
+  }
+}

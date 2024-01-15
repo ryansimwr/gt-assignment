@@ -1,19 +1,4 @@
-resource "aws_default_security_group" "default" {
-  vpc_id = aws_vpc.this.id
-  ingress {
-    protocol  = -1
-    self      = true
-    from_port = 0
-    to_port   = 0
-  }
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-resource "aws_security_group" "ec2_instance" {
+resource "aws_security_group" "ec2_asg" {
   name        = "dev-sg-lb-to-ec2"
   description = "Allow inbound and outbound traffic to EC2 instances from load balancer security group"
   ingress {

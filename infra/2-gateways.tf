@@ -6,10 +6,11 @@ resource "aws_internet_gateway" "igw" {
 }
 
 resource "aws_eip" "nat" {
+  depends_on = [aws_internet_gateway.igw]
   domain = "vpc"
 
   tags = {
-    Name = "nat"
+    Name = "nat-eip"
   }
 }
 
