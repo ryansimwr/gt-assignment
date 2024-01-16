@@ -1,16 +1,16 @@
 name: TF Deploy to AWS
 on:
-  # push:
-  #   branches:
-  #     - main
-  #   paths:
-  #     - infra/**
+  push:
+    branches:
+      - main
+    paths:
+      - infra/**
   
-  # pull_request:
-  #   branches:
-  #     - main
-  #   paths:
-  #     - infra/**
+  pull_request:
+    branches:
+      - main
+    paths:
+      - infra/**
   
   workflow_dispatch:
 
