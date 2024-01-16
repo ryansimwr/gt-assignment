@@ -3,6 +3,7 @@ resource "aws_launch_template" "ec2_launch" {
   image_id      = "ami-0120e0e7231daa18b" # To note: AMI is specific for each region
   instance_type = "t2.micro"
   user_data     = filebase64("./scripts/user_data.sh")
+  key_name      = var.aws_key_name
 
   network_interfaces {
     associate_public_ip_address = false

@@ -33,3 +33,7 @@ variable "subnet_az_private" {
   type        = list(string)
   default     = ["ap-southeast-1b"]
 }
+
+variable "aws_key_name" {
+  default = "aws-test"
+}
